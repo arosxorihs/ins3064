@@ -13,7 +13,7 @@ include "connection.php";
 </head>
 <body>
 <div class="container">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <h2>Laptop Data Form</h2>
         <form action="" name="form1" method="post">
             <div class="form-group">
@@ -45,9 +45,9 @@ include "connection.php";
                 <input type="number" class="form-control" id="stock_quantity" placeholder="Enter stock quantity" name="stock_quantity">
             </div>
 
-            <button type="submit" name="insert" class="btn btn-primary">Insert</button>
-            <button type="submit" name="update" class="btn btn-success">Update</button>
-            <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+            <button type="submit" name="insert" class="btn btn-default">Insert</button>
+            <button type="submit" name="update" class="btn btn-default">Update</button>
+            <button type="submit" name="delete" class="btn btn-default">Delete</button>
         </form>
     </div>
 </div>
@@ -71,18 +71,19 @@ include "connection.php";
         <?php
         if (!empty($link)) {
             $res=mysqli_query($link,"SELECT * FROM table2");
-            while($row=mysqli_fetch_array($res)) {
-                echo "<tr>";
-                echo "<td>".$row["id"]."</td>";
-                echo "<td>".$row["brand"]."</td>";
-                echo "<td>".$row["model"]."</td>";
-                echo "<td>".$row["processor"]."</td>";
-                echo "<td>".$row["ram_size"]."</td>";
-                echo "<td>".$row["storage_size"]."</td>";
-                echo "<td>".$row["price"]."</td>";
-                echo "<td>".$row["stock_quantity"]."</td>";
-                echo "</tr>";
-            }
+        }
+        while($row=mysqli_fetch_array($res))
+        {
+            echo "<tr>";
+            echo "<td>".$row["id"]."</td>";
+            echo "<td>".$row["brand"]."</td>";
+            echo "<td>".$row["model"]."</td>";
+            echo "<td>".$row["processor"]."</td>";
+            echo "<td>".$row["ram_size"]."</td>";
+            echo "<td>".$row["storage_size"]."</td>";
+            echo "<td>".$row["price"]."</td>";
+            echo "<td>".$row["stock_quantity"]."</td>";
+            echo "</tr>";
         }
         ?>
         </tbody>
@@ -101,7 +102,7 @@ if(isset($_POST["insert"])) {
     <?php
 }
 
-// Delete by brand + model
+// Delete (by brand + model)
 if(isset($_POST["delete"])) {
     mysqli_query($link,"DELETE FROM table2 WHERE brand='$_POST[brand]' AND model='$_POST[model]'");
     ?>
@@ -111,7 +112,7 @@ if(isset($_POST["delete"])) {
     <?php
 }
 
-// Update price and stock by brand + model
+// Update (price + stock by brand + model)
 if(isset($_POST["update"])) {
     mysqli_query($link,"UPDATE table2 SET price='$_POST[price]', stock_quantity='$_POST[stock_quantity]' WHERE brand='$_POST[brand]' AND model='$_POST[model]'");
     ?>
