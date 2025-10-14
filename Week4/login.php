@@ -1,6 +1,8 @@
 <?php
 include("db_connect.php");
 
+$message = "";
+
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
@@ -9,30 +11,66 @@ if (isset($_POST['login'])) {
     $result = mysqli_query($link, $query);
 
     if (mysqli_num_rows($result) == 1) {
-        echo("Login successful!");
+        $message = "Login successful!";
     } else {
-        echo "Wrong infor";
+        $message = "Wrong infor";
     }
 }
 
+if (isset($_POST['register'])) {
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
+
+    $check = mysqli_query($link, "SELECT * FROM users WHERE username='$username'");
+    if (mysqli_num_rows($check) > 0) {
+        $message = "Existed";
+    } else {
+        $query = "INSERT INTO users (username, password) VALUES ('$username', '$password')";
+        if (mysqli_query($link, $query)) {
+            $message = "Successful.";
+        } else {
+            $message = "Error: " . mysqli_error($link);
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login & Register</title>
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="" method="post">
-        <label for="">User name</label>
-        <input type="text" name="username" required> <br>
-        <label for="">Password</label>
-        <input type="password" name="password" id="" required>
+    <h2>Login or Register </h2>
+    <p><?php echo $message; ?></p>
 
-        <input type="submit" name="login" value="Login">
-    </form>
+    <?php if (!isset($_POST['login']) && !isset($_POST['register']) && !isset($_GET['action'])) { ?>
+        <form method="get">
+            <input type="submit" name="action" value="Login">
+            <input type="submit" name="action" value="Register">
+        </form>
+    <?php } ?>
+
+    <?php if (isset($_GET['action']) && $_GET['action'] == "Login") { ?>
+        <h3>Login</h3>
+        <form method="post">
+            Username: <input type="text" name="username" required><br><br>
+            Password: <input type="password" name="password" required><br><br>
+            <input type="submit" name="login" value="Login">
+        </form>
+        <br>
+        <a href="index.php">Back</a>
+    <?php } ?>
+
+    <?php if (isset($_GET['action']) && $_GET['action'] == "Register") { ?>
+        <h3>Register</h3>
+        <form method="post">
+            Username: <input type="text" name="username" required><br><br>
+            Password: <input type="password" name="password" required><br><br>
+            <input type="submit" name="register" value="Register">
+        </form>
+        <br>
+        <a href="index.php">Back</a>
+    <?php } ?>
 </body>
 </html>
